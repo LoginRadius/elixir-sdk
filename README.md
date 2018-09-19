@@ -23,7 +23,7 @@ Please visit [here](http://www.loginradius.com/) for more information.
 
 ## Documentation
 
-* [Configuration](https://docs.loginradius.com/api/v2/sdk-libraries/elixir) - Everything you need to begin using the LoginRadius SDK.
+* [Configuration](https://docs.loginradius.com/api/v2/deployment/sdk-libraries/elixir-library) - Everything you need to begin using the LoginRadius SDK.
 
 
 
