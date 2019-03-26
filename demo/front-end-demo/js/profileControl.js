@@ -2,6 +2,16 @@ const serverUrl = "http://localhost:4000/api/v1";
 let update = {};
 
 $( "#btn-user-changepassword" ).click(function() {
+    $("#user-changepassword-message").text("");
+
+    if($("#user-changepassword-oldpassword").val() == "" ||
+       $("#user-changepassword-newpassword").val() == "") 
+    {
+        $("#user-changepassword-message").text("Old Password/New Password are required fields.");
+        $("#user-changepassword-message").attr("class", "error-message");
+        return;
+    }
+
     let data = {
         "oldpassword" : $("#user-changepassword-oldpassword").val(),    
         "newpassword" : $("#user-changepassword-newpassword").val()
@@ -12,7 +22,13 @@ $( "#btn-user-changepassword" ).click(function() {
         data: JSON.stringify(data),
         contentType: "application/json",
         error: function(xhr) {
-            $("#user-changepassword-message").text(xhr.responseJSON.Description);
+            let errorMessage;
+            if (xhr.responseJSON) {
+                errorMessage = xhr.responseJSON.Description;
+            } else {
+                errorMessage = xhr.statusText;
+            }
+            $("#user-changepassword-message").text(errorMessage);
             $("#user-changepassword-message").attr("class", "error-message");
         }
     }).done(function() { 
@@ -22,16 +38,31 @@ $( "#btn-user-changepassword" ).click(function() {
 });
 
 $("#btn-user-setpassword").click(function() {
+    $("#user-setpassword-message").text("");
+
+    if($("#user-setpassword-password").val() == "") {
+        $("#user-setpassword-message").text("Password is a required field.");
+        $("#user-setpassword-message").attr("class", "error-message");
+        return;
+    }
+
     let data = {
         "password" : $("#user-setpassword-password").val()
     }
+
     $.ajax({
         method: "PUT",
-        url: serverUrl + "/profile/setpassword?uid=" + localStorage.getItem("lr-user-uid"),
+        url: serverUrl + "/profile/setpassword?uid=" + localStorage.getItem("LRUserID"),
         data: JSON.stringify(data),
         contentType: "application/json",
-        error: function(xhr){
-            $("#user-setpassword-message").text(xhr.responseJSON.Description);
+        error: function(xhr) {
+            let errorMessage;
+            if (xhr.responseJSON) {
+                errorMessage = xhr.responseJSON.Description;
+            } else {
+                errorMessage = xhr.statusText;
+            }
+            $("#user-setpassword-message").text(errorMessage);
             $("#user-setpassword-message").attr("class", "error-message");
         }
     }).done(function() { 
@@ -41,11 +72,13 @@ $("#btn-user-setpassword").click(function() {
 });
 
 $("#btn-user-updateaccount").click(function() {
+    $("#user-updateaccount-message").text("");
+
     let data = {};
     let dataFields = {
-        "FirstName": $("#user-updateaccount-firstname").val(),
-        "LastName": $("#user-updateaccount-lastname").val(),
-        "About": $("#user-updateaccount-about").val()
+        "FirstName": $("#user-updateaccount-firstname").val().trim(),
+        "LastName": $("#user-updateaccount-lastname").val().trim(),
+        "About": $("#user-updateaccount-about").val().trim()
     }
 
     for (let key in dataFields) {
@@ -58,11 +91,17 @@ $("#btn-user-updateaccount").click(function() {
 
     $.ajax({
         method: "PUT",
-        url: serverUrl + "/profile/update?uid=" + localStorage.getItem("lr-user-uid"),
+        url: serverUrl + "/profile/update?uid=" + localStorage.getItem("LRUserID"),
         data: JSON.stringify(data),
         contentType: "application/json",
         error: function(xhr) {
-            $("#user-updateaccount-message").text(xhr.responseJSON.Description);
+            let errorMessage;
+            if (xhr.responseJSON) {
+                errorMessage = xhr.responseJSON.Description;
+            } else {
+                errorMessage = xhr.statusText;
+            }
+            $("#user-updateaccount-message").text(errorMessage);
             $("#user-updateaccount-message").attr("class", "error-message");
         }
     }).done(function() { 
@@ -73,12 +112,24 @@ $("#btn-user-updateaccount").click(function() {
 });
 
 $("#btn-user-createcustomobj").click(function() {
+    $("#user-createcustomobj-message").text("");
+
+    if($("#user-createcustomobj-objectname").val().trim() == "" ||
+       $("#user-createcustomobj-data").val().trim() == "") 
+    {
+        $("#user-createcustomobj-message").text("Object Name/Data are required fields.");
+        $("#user-createcustomobj-message").attr("class", "error-message");
+        return;
+    }
+
     let data;
+
     try {
         data = JSON.parse($("#user-createcustomobj-data").val());
     } catch(e) {
         $("#user-createcustomobj-message").text("Please input a valid JSON object in the data field.");
         $("#user-createcustomobj-message").attr("class", "error-message");
+        return;
     }
 
     $.ajax({
@@ -87,7 +138,13 @@ $("#btn-user-createcustomobj").click(function() {
         data: JSON.stringify(data),
         contentType: "application/json",
         error: function(xhr) {
-            $("#user-createcustomobj-message").text(xhr.responseJSON.Description);
+            let errorMessage;
+            if (xhr.responseJSON) {
+                errorMessage = xhr.responseJSON.Description;
+            } else {
+                errorMessage = xhr.statusText;
+            }
+            $("#user-createcustomobj-message").text(errorMessage);
             $("#user-createcustomobj-message").attr("class", "error-message");
         }
     }).done(function() { 
@@ -97,13 +154,25 @@ $("#btn-user-createcustomobj").click(function() {
 });
 
 $("#btn-user-updatecustomobj").click(function() {
-    let data = {};
+    $("#user-updatecustomobj-message").text("");
+
+    if($("#user-updatecustomobj-objectname").val().trim() == "" ||
+       $("#user-updatecustomobj-objectrecordid").val().trim() == "" ||
+       $("#user-updatecustomobj-data").val().trim() == "") 
+    {
+        $("#user-updatecustomobj-message").text("Object Name/Object ID/Data are required fields.");
+        $("#user-updatecustomobj-message").attr("class", "error-message");
+        return;
+    }
+
+    let data;
 
     try {
         data = JSON.parse($("#user-updatecustomobj-data").val());
     } catch(e) {
         $("#user-updatecustomobj-message").text("Please input a valid JSON object in the data field.");
         $("#user-updatecustomobj-message").attr("class", "error-message");
+        return;
     }
 
     $.ajax({
@@ -113,7 +182,13 @@ $("#btn-user-updatecustomobj").click(function() {
         data: JSON.stringify(data),
         contentType: "application/json",
         error: function(xhr) {
-            $("#user-updatecustomobj-message").text(xhr.responseJSON.Description);
+            let errorMessage;
+            if (xhr.responseJSON) {
+                errorMessage = xhr.responseJSON.Description;
+            } else {
+                errorMessage = xhr.statusText;
+            }
+            $("#user-updatecustomobj-message").text(errorMessage);
             $("#user-updatecustomobj-message").attr("class", "error-message");
         }
     }).done(function() { 
@@ -123,30 +198,60 @@ $("#btn-user-updatecustomobj").click(function() {
 });
 
 $("#btn-user-deletecustomobj").click(function() {
+    $("#user-deletecustomobj-message").text("");
+
+    if($("#user-deletecustomobj-objectname").val().trim() == "" || 
+       $("#user-deletecustomobj-objectrecordid").val().trim() == "") 
+    {
+        $("#user-deletecustomobj-message").text("Object Name/Object ID are required fields.");
+        $("#user-deletecustomobj-message").attr("class", "error-message");
+        return;
+    }
+
     $.ajax({
         method: "DELETE",
         url: serverUrl + "/customobj?object_name=" + $("#user-deletecustomobj-objectname").val() + "&auth=" + localStorage.getItem("LRTokenKey") +
             "&object_id=" + $("#user-deletecustomobj-objectrecordid").val(),
         contentType: "application/json",
         error: function(xhr) {
-            $("#user-deletecustomobj-message").text(xhr.responseJSON.Description);
+            let errorMessage;
+            if (xhr.responseJSON) {
+                errorMessage = xhr.responseJSON.Description;
+            } else {
+                errorMessage = xhr.statusText;
+            }
+            $("#user-deletecustomobj-message").text(errorMessage);
             $("#user-deletecustomobj-message").attr("class", "error-message");
         }
-    }).done(function() { 
+    }).done(function() {
         $("#user-deletecustomobj-message").text("Custom object deleted successfully.");
         $("#user-deletecustomobj-message").attr("class", "success-message");
     });
 });
 
 $("#btn-user-getcustomobj").click(function() {
+    $("#user-getcustomobj-message").text("");
+
+    if($("#user-getcustomobj-objectname").val().trim() == "") {
+        $("#user-getcustomobj-message").text("Object Name is a required field.");
+        $("#user-getcustomobj-message").attr("class", "error-message");
+        return;
+    }
+
     $.ajax({
         method: "GET",
         cache: false,
         url: serverUrl + "/customobj?object_name=" + $("#user-getcustomobj-objectname").val() + "&auth=" + localStorage.getItem("LRTokenKey"),
         contentType: "application/json",
         error: function(xhr) {
+            let errorMessage;
+            if (xhr.responseJSON) {
+                errorMessage = xhr.responseJSON.Description;
+            } else {
+                errorMessage = xhr.statusText;
+            }
             $('#table-customobj tr').remove();
-            $("#user-getcustomobj-message").text(xhr.responseJSON.Description);
+            $("#user-getcustomobj-message").text(errorMessage);
             $("#user-getcustomobj-message").attr("class", "error-message");
         }
     }).done(function(ret) {
@@ -167,6 +272,8 @@ $("#btn-user-getcustomobj").click(function() {
 });
 
 $("#btn-user-mfa-resetgoogle").click(function() {
+    $("#user-mfa-message").text("");
+
     let data = {
         "googleauthenticator": true
     }
@@ -177,7 +284,13 @@ $("#btn-user-mfa-resetgoogle").click(function() {
         data: JSON.stringify(data),
         contentType: "application/json",
         error: function(xhr) {
-            $("#user-mfa-message").text(xhr.responseJSON.Description);
+            let errorMessage;
+            if (xhr.responseJSON) {
+                errorMessage = xhr.responseJSON.Description;
+            } else {
+                errorMessage = xhr.statusText;
+            }
+            $("#user-mfa-message").text(errorMessage);
             $("#user-mfa-message").attr("class", "error-message");
         }
     }).done(function() { 
@@ -187,12 +300,20 @@ $("#btn-user-mfa-resetgoogle").click(function() {
 });
 
 $("#btn-user-mfaenable").click(function() {
+    $("#user-mfaenable-message").text("");
+
     $.ajax({
         method: "GET",
         url: serverUrl + "/mfa/validate?auth=" + localStorage.getItem("LRTokenKey"),
         contentType: "application/json",
         error: function(xhr) {
-            $("#user-mfaenable-message").text(xhr.responseJSON.Description);
+            let errorMessage;
+            if (xhr.responseJSON) {
+                errorMessage = xhr.responseJSON.Description;
+            } else {
+                errorMessage = xhr.statusText;
+            }
+            $("#user-mfaenable-message").text(errorMessage);
             $("#user-mfaenable-message").attr("class", "error-message");
         }
     }).done(function(ret) {
@@ -207,6 +328,14 @@ $("#btn-user-mfaenable").click(function() {
 });
 
 $("#user-mfaenable").on("click", "#btn-user-mfaenable-googleauth", function() {
+    $("#user-mfaenable-message").text("");
+
+    if($("#user-mfaenable-googleauth").val().trim() == "") {
+        $("#user-mfaenable-message").text("Google Authenticator Code is a required field.");
+        $("#user-mfaenable-message").attr("class", "error-message");
+        return;
+    }
+
     let data = {
         "googleauthenticatorcode": $("#user-mfaenable-googleauth").val()
     }
@@ -217,7 +346,13 @@ $("#user-mfaenable").on("click", "#btn-user-mfaenable-googleauth", function() {
         data: JSON.stringify(data),
         contentType: "application/json",
         error: function(xhr) {
-            $("#user-mfaenable-message").text(xhr.responseJSON.Description);
+            let errorMessage;
+            if (xhr.responseJSON) {
+                errorMessage = xhr.responseJSON.Description;
+            } else {
+                errorMessage = xhr.statusText;
+            }
+            $("#user-mfaenable-message").text(errorMessage);
             $("#user-mfaenable-message").attr("class", "error-message");
         }
     }).done(function() {
@@ -226,10 +361,18 @@ $("#user-mfaenable").on("click", "#btn-user-mfaenable-googleauth", function() {
     });
 });
 
-$( "#btn-user-createrole" ).click(function() {
+$("#btn-user-createrole").click(function() {
+    $("#user-createrole-message").text("");
+
+    if($("#user-roles-createrole").val().trim() == "") {
+        $("#user-createrole-message").text("Role is a required field.");
+        $("#user-createrole-message").attr("class", "error-message");
+        return;
+    }
+
     let data = {
         "roles" : [
-            { "Name": $("#user-roles-createrole").val() }
+            { "Name": $("#user-roles-createrole").val().trim() }
         ]
     }
 
@@ -239,7 +382,13 @@ $( "#btn-user-createrole" ).click(function() {
         data: JSON.stringify(data),
         contentType: "application/json",
         error: function(xhr) {
-            $("#user-createrole-message").text(xhr.responseJSON.Description);
+            let errorMessage;
+            if (xhr.responseJSON) {
+                errorMessage = xhr.responseJSON.Description;
+            } else {
+                errorMessage = xhr.statusText;
+            }
+            $("#user-createrole-message").text(errorMessage);
             $("#user-createrole-message").attr("class", "error-message");
         }
     }).done(function() { 
@@ -249,13 +398,27 @@ $( "#btn-user-createrole" ).click(function() {
     });
 });
 
-$( "#btn-user-deleterole" ).click(function() {
+$("#btn-user-deleterole").click(function() {
+    $("#user-deleterole-message").text("");
+
+    if($("#user-roles-deleterole").val().trim() == "") {
+        $("#user-deleterole-message").text("Role is a required field.");
+        $("#user-deleterole-message").attr("class", "error-message");
+        return;
+    }
+
     $.ajax({
         method: "DELETE",
-        url: serverUrl + "/roles?role=" + $("#user-roles-deleterole").val(),
+        url: serverUrl + "/roles?role=" + $("#user-roles-deleterole").val().trim(),
         contentType: "application/json",
         error: function(xhr) {
-            $("#user-deleterole-message").text(xhr.responseJSON.Description);
+            let errorMessage;
+            if (xhr.responseJSON) {
+                errorMessage = xhr.responseJSON.Description;
+            } else {
+                errorMessage = xhr.statusText;
+            }
+            $("#user-deleterole-message").text(errorMessage);
             $("#user-deleterole-message").attr("class", "error-message");
         }
     }).done(function() { 
@@ -265,20 +428,34 @@ $( "#btn-user-deleterole" ).click(function() {
     });
 });
 
-$( "#btn-user-assignrole" ).click(function() {
+$("#btn-user-assignrole").click(function() {
+    $("#user-assignrole-message").text("");
+
+    if($("#user-roles-assignrole").val().trim() == "") {
+        $("#user-assignrole-message").text("Role is a required field.");
+        $("#user-assignrole-message").attr("class", "error-message");
+        return;
+    }
+
     let data = {
         "Roles" : [
-            $("#user-roles-assignrole").val()
+            $("#user-roles-assignrole").val().trim()
         ]
     }
 
     $.ajax({
         method: "PUT",
-        url: serverUrl + "/roles?uid=" + localStorage.getItem("lr-user-uid"),
+        url: serverUrl + "/roles?uid=" + localStorage.getItem("LRUserID"),
         data: JSON.stringify(data),
         contentType: "application/json",
         error: function(xhr) {
-            $("#user-assignrole-message").text(xhr.responseJSON.Description);
+            let errorMessage;
+            if (xhr.responseJSON) {
+                errorMessage = xhr.responseJSON.Description;
+            } else {
+                errorMessage = xhr.statusText;
+            }
+            $("#user-assignrole-message").text(errorMessage);
             $("#user-assignrole-message").attr("class", "error-message");
         }
     }).done(function() { 
@@ -286,6 +463,12 @@ $( "#btn-user-assignrole" ).click(function() {
         $("#user-assignrole-message").attr("class", "success-message");
         roleUpdate();
     });
+});
+
+$("#menu-logout").click(function() {
+    localStorage.removeItem("LRTokenKey");
+    localStorage.removeItem("LRUserID");
+    window.location.replace("index.html");
 });
 
 let profileUpdate = function() {
@@ -298,30 +481,44 @@ let profileUpdate = function() {
         method: "GET",
         cache: false,
         url: serverUrl + "/profile?auth=" + localStorage.getItem("LRTokenKey"),
-        error: function(){
+        error: function() {
             localStorage.removeItem("LRTokenKey");
-            localStorage.removeItem("lr-user-uid");
+            localStorage.removeItem("LRUserID");
             window.location.replace("index.html");
         }
     }).done(function(ret) {
-        $("#profile-name").html("<b>" + ret.FullName + "</b>");
-        $("#profile-provider").text("Provider: " + ret.Provider);
-        $("#profile-email").text(ret.Email[0].Value);
-        $("#profile-lastlogin").text("Last Login Date: " + ret.LastLoginDate);
-        update.firstName = ret.FirstName;
-        update.lastName = ret.LastName;
-        update.about = ret.About;
+        if (ret.ThumbnailImageUrl) {
+            $("#profile-image").html("<img src='" + ret.ThumbnailImageUrl + "'>");
+        } else {
+            $("#profile-image").html("<img src='./user-blank.png'>");
+        }
+        $("#profile-name").html("<b>" + (ret.FullName ? ret.FullName : "") + "</b>");
+        $("#profile-provider").text("Provider: " + (ret.Provider ? ret.Provider : ""));
+        $("#profile-email").text((ret.Email && ret.Email[0] && ret.Email[0].Value ? ret.Email[0].Value : ""));
+        $("#profile-lastlogin").text("Last Login Date: " + (ret.LastLoginDate ? ret.LastLoginDate : ""));
+        update.FirstName = ret.FirstName;
+        update.LastName = ret.LastName;
+        update.About = ret.About;
     });
 }
 
 let roleUpdate = function() {
+    $("#user-allroles-message").text("");
+    $("#user-userroles-message").text("");
+
     $.ajax({
         method: "GET",
         cache: false,
         url: serverUrl + "/roles",
         error: function(xhr) {
-            $("#minimal-verification-message").text(xhr.responseJSON.Description);
-            $("#minimal-verification-message").attr("class", "error-message");
+            let errorMessage;
+            if (xhr.responseJSON) {
+                errorMessage = xhr.responseJSON.Description;
+            } else {
+                errorMessage = xhr.statusText;
+            }
+            $("#user-allroles-message").text(errorMessage);
+            $("#user-allroles-message").attr("class", "error-message");
         }
     }).done(function(ret) {
         $('#table-allroles tr:not(:first)').remove();
@@ -335,14 +532,19 @@ let roleUpdate = function() {
         }
     });
 
-
     $.ajax({
         method: "GET",
         cache: false,
-        url: serverUrl + "/roles/get?uid=" + localStorage.getItem("lr-user-uid"),
+        url: serverUrl + "/roles/get?uid=" + localStorage.getItem("LRUserID"),
         error: function(xhr) {
-            $("#minimal-verification-message").text(xhr.responseJSON.Description);
-            $("#minimal-verification-message").attr("class", "error-message");
+            let errorMessage;
+            if (xhr.responseJSON) {
+                errorMessage = xhr.responseJSON.Description;
+            } else {
+                errorMessage = xhr.statusText;
+            }
+            $("#user-userroles-message").text(errorMessage);
+            $("#user-userroles-message").attr("class", "error-message");
         }
     }).done(function(ret) {
         $('#table-userroles tr:not(:first)').remove();

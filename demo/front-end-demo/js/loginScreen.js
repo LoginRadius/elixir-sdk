@@ -4,7 +4,7 @@ LRObject.util.ready(function() {
 
 let options = {
   redirecturl: {
-    afterlogin: "<Profile Link>",
-    afterreset: "<Index Link>"
+    afterlogin: "profile.html",
+    afterreset: "index.html"
   }
 }

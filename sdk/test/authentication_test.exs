@@ -3,20 +3,20 @@ defmodule AuthenticationTest do
 
   defp get_access_token(test_login) do
     elem(test_login, 1)
-      |> elem(1)
-      |> Map.fetch!("access_token")
+    |> elem(1)
+    |> Map.fetch!("access_token")
   end
 
   defp get_uid(test_login) do
     elem(test_login, 1)
-      |> elem(1)
-      |> Map.fetch!("Profile")
-      |> Map.fetch!("Uid")
+    |> elem(1)
+    |> Map.fetch!("Profile")
+    |> Map.fetch!("Uid")
   end
 
   setup do
-    test_data = LoginRadius.Account.create(
-      %{
+    test_data =
+      LoginRadius.Account.create(%{
         "FirstName" => "testaccount",
         "LastName" => "auto",
         "Email" => [
@@ -34,10 +34,12 @@ defmodule AuthenticationTest do
         "PhoneId" => "17787694512",
         "EmailVerified" => true
       })
+
     login_data = %{
       "email" => "testaccountauto@mailinator.com",
       "password" => "password"
     }
+
     sq_data = %{
       "securityquestionanswer" => %{
         "6fc48739c6754040a72033c8d0921969" => "answer"
@@ -47,15 +49,15 @@ defmodule AuthenticationTest do
     test_login = LoginRadius.Authentication.login_by_email(login_data)
 
     test_login
-      |> get_access_token()
-      |> LoginRadius.Authentication.update_security_questions_by_access_token(sq_data)
+    |> get_access_token()
+    |> LoginRadius.Authentication.update_security_questions_by_access_token(sq_data)
 
-    on_exit fn ->
+    on_exit(fn ->
       elem(test_data, 1)
-        |> elem(1)
-        |> Map.fetch!("Uid")
-        |> LoginRadius.Account.delete()
-    end
+      |> elem(1)
+      |> Map.fetch!("Uid")
+      |> LoginRadius.Account.delete()
+    end)
 
     %{"test_login" => test_login}
   end
@@ -66,8 +68,10 @@ defmodule AuthenticationTest do
       "type" => "Secondary"
     }
 
-    test_add_email_response = get_access_token(test_login)
+    test_add_email_response =
+      get_access_token(test_login)
       |> LoginRadius.Authentication.add_email(update_data)
+
     assert elem(test_add_email_response, 0) == :ok
   end
 
@@ -76,7 +80,8 @@ defmodule AuthenticationTest do
       "email" => "testaccountauto@mailinator.com"
     }
 
-    test_forgot_password_response = LoginRadius.Authentication.forgot_password("localhost:8080", update_data)
+    test_forgot_password_response =
+      LoginRadius.Authentication.forgot_password("localhost:8080", update_data)
 
     assert elem(test_forgot_password_response, 0) == :ok
   end
@@ -92,11 +97,13 @@ defmodule AuthenticationTest do
       "Password" => "password"
     }
 
-    test_auth_urbe_response = LoginRadius.Authentication.user_registration_by_email(registration_data)
+    test_auth_urbe_response =
+      LoginRadius.Authentication.user_registration_by_email(registration_data)
 
     assert elem(test_auth_urbe_response, 0) == :ok
 
-    test_ad_response = LoginRadius.Account.profiles_by_email("testaccountauto2@mailinator.com")
+    test_ad_response =
+      LoginRadius.Account.profiles_by_email("testaccountauto2@mailinator.com")
       |> elem(1)
       |> elem(1)
       |> Map.fetch!("Uid")
@@ -108,7 +115,7 @@ defmodule AuthenticationTest do
   test "Auth Login by Email" do
     login_data = %{
       "email" => "testaccountauto@mailinator.com",
-      "password" => "password",
+      "password" => "password"
     }
 
     test_auth_lbe_response = LoginRadius.Authentication.login_by_email(login_data)
@@ -118,7 +125,7 @@ defmodule AuthenticationTest do
   test "Auth Login by Username" do
     login_data = %{
       "username" => "taa",
-      "password" => "password",
+      "password" => "password"
     }
 
     test_auth_lbu_response = LoginRadius.Authentication.login_by_username(login_data)
@@ -126,62 +133,82 @@ defmodule AuthenticationTest do
   end
 
   test "Auth Check Email Availability" do
-    test_auth_cea_response = "testaccountauto@mailinator.com"
+    test_auth_cea_response =
+      "testaccountauto@mailinator.com"
       |> LoginRadius.Authentication.check_email_availability()
+
     assert elem(test_auth_cea_response, 0) == :ok
-    is_exist = test_auth_cea_response
+
+    is_exist =
+      test_auth_cea_response
       |> elem(1)
       |> elem(1)
       |> Map.fetch!("IsExist")
+
     assert is_exist == true
   end
 
   test "Auth Check Username Availability" do
-    test_auth_cua_response = "taa"
+    test_auth_cua_response =
+      "taa"
       |> LoginRadius.Authentication.check_username_availability()
+
     assert elem(test_auth_cua_response, 0) == :ok
-    is_exist = test_auth_cua_response
+
+    is_exist =
+      test_auth_cua_response
       |> elem(1)
       |> elem(1)
       |> Map.fetch!("IsExist")
+
     assert is_exist == true
   end
 
   test "Auth Read Profile by Token", %{"test_login" => test_login} do
-    test_auth_rpbt_response = get_access_token(test_login)
+    test_auth_rpbt_response =
+      get_access_token(test_login)
       |> LoginRadius.Authentication.read_profiles_by_access_token()
+
     assert elem(test_auth_rpbt_response, 0) == :ok
   end
 
   test "Auth Read Profile by Token 2" do
-    test_auth_rpbt2_response = "84957439865"
+    test_auth_rpbt2_response =
+      "84957439865"
       |> LoginRadius.Authentication.read_profiles_by_access_token()
+
     assert elem(test_auth_rpbt2_response, 0) == :error
   end
 
   test "Auth Privacy Policy Accept" do
     # No test available
-    #test_auth_ppa_response = get_access_token(test_login)
+    # test_auth_ppa_response = get_access_token(test_login)
     #  |> LoginRadius.Authentication.privacy_policy_accept()
-    #assert elem(test_auth_ppa_response, 0) == :ok
+    # assert elem(test_auth_ppa_response, 0) == :ok
     IO.puts("No test available for Privacy Policy Accept.")
   end
 
   test "Auth Send Welcome Email", %{"test_login" => test_login} do
-    test_auth_swe_response = get_access_token(test_login)
+    test_auth_swe_response =
+      get_access_token(test_login)
       |> LoginRadius.Authentication.send_welcome_email()
+
     assert elem(test_auth_swe_response, 0) == :ok
   end
 
   test "Auth Social Identity", %{"test_login" => test_login} do
-    test_auth_si_response = get_access_token(test_login)
+    test_auth_si_response =
+      get_access_token(test_login)
       |> LoginRadius.Authentication.social_identity()
+
     assert elem(test_auth_si_response, 0) == :ok
   end
 
   test "Auth Validate Access Token", %{"test_login" => test_login} do
-    test_auth_vat_response = get_access_token(test_login)
+    test_auth_vat_response =
+      get_access_token(test_login)
       |> LoginRadius.Authentication.validate_access_token()
+
     assert elem(test_auth_vat_response, 0) == :ok
   end
 
@@ -189,17 +216,20 @@ defmodule AuthenticationTest do
     update_data = %{
       "EmailVerified" => false
     }
+
     get_uid(test_login)
-      |> LoginRadius.Account.update(update_data, false)
+    |> LoginRadius.Account.update(update_data, false)
 
     test_login_email = "testaccountauto@mailinator.com"
-    test_auth_ve_response = Map.put(%{}, "email", test_login_email)
+
+    test_auth_ve_response =
+      Map.put(%{}, "email", test_login_email)
       |> LoginRadius.Account.email_verification_token()
       |> elem(1)
       |> elem(1)
       |> Map.fetch!("VerificationToken")
       |> LoginRadius.Authentication.verify_email()
-    
+
     assert elem(test_auth_ve_response, 0) == :ok
   end
 
@@ -209,35 +239,40 @@ defmodule AuthenticationTest do
   end
 
   test "Auth Invalidate Access Token", %{"test_login" => test_login} do
-    test_auth_iat_response = get_access_token(test_login)
+    test_auth_iat_response =
+      get_access_token(test_login)
       |> LoginRadius.Authentication.invalidate_access_token()
 
     assert elem(test_auth_iat_response, 0) == :ok
   end
 
   test "Auth Security Questions by Access Token", %{"test_login" => test_login} do
-    test_auth_sqbat_response = get_access_token(test_login)
+    test_auth_sqbat_response =
+      get_access_token(test_login)
       |> LoginRadius.Authentication.security_questions_by_access_token()
 
     assert elem(test_auth_sqbat_response, 0) == :ok
   end
 
   test "Auth Security Questions by Email" do
-    test_auth_sqbe_response = "testaccountauto@mailinator.com"
+    test_auth_sqbe_response =
+      "testaccountauto@mailinator.com"
       |> LoginRadius.Authentication.security_questions_by_email()
 
     assert elem(test_auth_sqbe_response, 0) == :ok
   end
 
   test "Auth Security Questions by Username" do
-    test_auth_sqbu_response = "taa"
+    test_auth_sqbu_response =
+      "taa"
       |> LoginRadius.Authentication.security_questions_by_username()
 
     assert elem(test_auth_sqbu_response, 0) == :ok
   end
 
   test "Auth Security Questions by Phone" do
-    test_auth_sqbp_response = "17787694512"
+    test_auth_sqbp_response =
+      "17787694512"
       |> LoginRadius.Authentication.security_questions_by_phone()
 
     assert elem(test_auth_sqbp_response, 0) == :ok
@@ -254,7 +289,8 @@ defmodule AuthenticationTest do
       "newpassword" => "passwords"
     }
 
-    test_auth_cp_response = get_access_token(test_login)
+    test_auth_cp_response =
+      get_access_token(test_login)
       |> LoginRadius.Authentication.change_password(update_data)
 
     assert elem(test_auth_cp_response, 0) == :ok
@@ -262,29 +298,38 @@ defmodule AuthenticationTest do
 
   test "Auth Link/Unlink Social Identities", %{"test_login" => test_login} do
     if LoginRadiusTest.social_login_request_token() == "" do
-      IO.puts("Need to specify a social login request token to test linking/unlinking social identities.")
+      IO.puts(
+        "Need to specify a social login request token to test linking/unlinking social identities."
+      )
     else
-      IO.puts("If this test fails (Link/Unlink Social Identities), check validity of social provider request token in loginradius_test.exs.")
+      IO.puts(
+        "If this test fails (Link/Unlink Social Identities), check validity of social provider request token in loginradius_test.exs."
+      )
+
       update_data = %{
         "candidatetoken" => LoginRadiusTest.social_login_request_token()
       }
 
-      test_auth_lsi_response = test_login
+      test_auth_lsi_response =
+        test_login
         |> get_access_token
         |> LoginRadius.Authentication.link_social_identities(update_data)
 
       assert elem(test_auth_lsi_response, 0) == :ok
 
-      test_account_info = LoginRadius.Account.profiles_by_email("testaccountauto@mailinator.com")
+      test_account_info =
+        LoginRadius.Account.profiles_by_email("testaccountauto@mailinator.com")
         |> elem(1)
         |> elem(1)
 
-      account_provider = test_account_info
+      account_provider =
+        test_account_info
         |> Map.fetch!("Identities")
         |> List.first()
         |> Map.fetch!("Provider")
 
-      account_provider_id = test_account_info
+      account_provider_id =
+        test_account_info
         |> Map.fetch!("Identities")
         |> List.first()
         |> Map.fetch!("ID")
@@ -294,10 +339,11 @@ defmodule AuthenticationTest do
         "providerid" => account_provider_id
       }
 
-      test_auth_usi_response = test_login
+      test_auth_usi_response =
+        test_login
         |> get_access_token
         |> LoginRadius.Authentication.unlink_social_identities(unlink_data)
-      
+
       assert elem(test_auth_usi_response, 0) == :ok
     end
   end
@@ -306,9 +352,10 @@ defmodule AuthenticationTest do
     update_data = %{
       "EmailVerified" => false
     }
+
     get_uid(test_login)
-      |> LoginRadius.Account.update(update_data, false)
-    
+    |> LoginRadius.Account.update(update_data, false)
+
     update_data2 = %{
       "email" => "testaccountauto@mailinator.com"
     }
@@ -327,7 +374,7 @@ defmodule AuthenticationTest do
     # Tested, working
     IO.puts("Auth Reset Password by OTP tested manually.")
   end
-  
+
   test "Auth Reset Password by Security Answer and Email" do
     update_data = %{
       "securityanswer" => %{
@@ -338,7 +385,8 @@ defmodule AuthenticationTest do
       "resetpasswordemailtemplate" => ""
     }
 
-    test_auth_rpbsaae_response = LoginRadius.Authentication.reset_password_by_security_answer_and_email(update_data)
+    test_auth_rpbsaae_response =
+      LoginRadius.Authentication.reset_password_by_security_answer_and_email(update_data)
 
     assert elem(test_auth_rpbsaae_response, 0) == :ok
   end
@@ -353,7 +401,8 @@ defmodule AuthenticationTest do
       "resetpasswordemailtemplate" => ""
     }
 
-    test_auth_rpbsaap_response = LoginRadius.Authentication.reset_password_by_security_answer_and_phone(update_data)
+    test_auth_rpbsaap_response =
+      LoginRadius.Authentication.reset_password_by_security_answer_and_phone(update_data)
 
     assert elem(test_auth_rpbsaap_response, 0) == :ok
   end
@@ -368,7 +417,8 @@ defmodule AuthenticationTest do
       "resetpasswordemailtemplate" => ""
     }
 
-    test_auth_rpbsaau_response = LoginRadius.Authentication.reset_password_by_security_answer_and_username(update_data)
+    test_auth_rpbsaau_response =
+      LoginRadius.Authentication.reset_password_by_security_answer_and_username(update_data)
 
     assert elem(test_auth_rpbsaau_response, 0) == :ok
   end
@@ -378,7 +428,8 @@ defmodule AuthenticationTest do
       "username" => "testaccountauto"
     }
 
-    test_auth_socu_response = get_access_token(test_login)
+    test_auth_socu_response =
+      get_access_token(test_login)
       |> LoginRadius.Authentication.set_or_change_username(update_data)
 
     assert elem(test_auth_socu_response, 0) == :ok
@@ -389,14 +440,18 @@ defmodule AuthenticationTest do
       "Company" => "LoginRadius"
     }
 
-    test_auth_upbat_response = get_access_token(test_login)
+    test_auth_upbat_response =
+      get_access_token(test_login)
       |> LoginRadius.Authentication.update_profile_by_access_token(update_data)
 
     assert elem(test_auth_upbat_response, 0) == :ok
-    response_company = elem(test_auth_upbat_response, 1)
+
+    response_company =
+      elem(test_auth_upbat_response, 1)
       |> elem(1)
       |> Map.fetch!("Data")
       |> Map.fetch!("Company")
+
     assert response_company == "LoginRadius"
   end
 
@@ -407,14 +462,16 @@ defmodule AuthenticationTest do
       }
     }
 
-    test_auth_usqbat_response = get_access_token(test_login)
+    test_auth_usqbat_response =
+      get_access_token(test_login)
       |> LoginRadius.Authentication.update_security_questions_by_access_token(update_data)
 
     assert elem(test_auth_usqbat_response, 0) == :ok
   end
 
   test "Auth Delete Account with Email Confirmation", %{"test_login" => test_login} do
-    test_auth_dawec_response = get_access_token(test_login)
+    test_auth_dawec_response =
+      get_access_token(test_login)
       |> LoginRadius.Authentication.delete_account_with_email_confirmation()
 
     assert elem(test_auth_dawec_response, 0) == :ok
@@ -429,15 +486,18 @@ defmodule AuthenticationTest do
         }
       ]
     }
+
     delete_data = %{
       "email" => "emailtodelete@mailinator.com"
     }
 
     get_uid(test_login)
-      |> LoginRadius.Account.update(update_data)
+    |> LoginRadius.Account.update(update_data)
 
-    test_remove_email_response = get_access_token(test_login)
+    test_remove_email_response =
+      get_access_token(test_login)
       |> LoginRadius.Authentication.remove_email(delete_data)
+
     assert elem(test_remove_email_response, 0) == :ok
   end
 end

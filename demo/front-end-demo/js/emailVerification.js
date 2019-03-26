@@ -11,8 +11,14 @@ if (params) {
             method: "GET",
             url: serverUrl + "/register/verify/email?verification_token=" + paramsObj.vtoken,
             contentType: "application/json",
-            error: function(xhr){
-                $("#minimal-verification-message").text(xhr.responseJSON.Description);
+            error: function(xhr) {
+                let errorMessage;
+                if (xhr.responseJSON) {
+                    errorMessage = xhr.responseJSON.Description;
+                } else {
+                    errorMessage = xhr.statusText;
+                }
+                $("#minimal-verification-message").text(errorMessage);
                 $("#minimal-verification-message").attr("class", "error-message");
             }
         }).done(function() { 
@@ -25,12 +31,18 @@ if (params) {
             url: serverUrl + "/login/passwordless/auth?verification_token=" + paramsObj.vtoken,
             contentType: "application/json",
             error: function(xhr) {
-                $("#minimal-verification-message").text(xhr.responseJSON.Description);
+                let errorMessage;
+                if (xhr.responseJSON) {
+                    errorMessage = xhr.responseJSON.Description;
+                } else {
+                    errorMessage = xhr.statusText;
+                }
+                $("#minimal-verification-message").text(errorMessage);
                 $("#minimal-verification-message").attr("class", "error-message");
             }
         }).done(function(ret) {
             localStorage.setItem("LRTokenKey", ret.access_token);
-            localStorage.setItem("lr-user-uid", ret.Profile.Uid);
+            localStorage.setItem("LRUserID", ret.Profile.Uid);
             window.location.replace("profile.html");
         });
     } else {

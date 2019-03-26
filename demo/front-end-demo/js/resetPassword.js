@@ -4,6 +4,14 @@ const serverUrl = "http://localhost:4000/api/v1";
 let paramsObj = {};
 
 $("#btn-minimal-resetpassword").click(function() {
+  $("#minimal-resetpassword-message").text("");
+
+  if($("#minimal-resetpassword-password").val() == "") {
+        $("#minimal-resetpassword-message").text("Password is a required field.");
+        $("#minimal-resetpassword-message").attr("class", "error-message");
+        return;
+    }
+
   if($("#minimal-resetpassword-password").val() !== $("#minimal-resetpassword-confirmpassword").val()) {
     $("#minimal-resetpassword-message").text("Passwords do not match!");
     $("#minimal-resetpassword-message").attr("class", "error-message");
@@ -21,7 +29,13 @@ $("#btn-minimal-resetpassword").click(function() {
       url: serverUrl + "/login/resetpassword",
       contentType: "application/json",
       error: function(xhr) {
-          $("#minimal-resetpassword-message").text(xhr.responseJSON.Description);
+        let errorMessage;
+        if (xhr.responseJSON) {
+            errorMessage = xhr.responseJSON.Description;
+        } else {
+            errorMessage = xhr.statusText;
+        }
+          $("#minimal-resetpassword-message").text(errorMessage);
           $("#minimal-resetpassword-message").attr("class", "error-message");
       }
   }).done(function() { 

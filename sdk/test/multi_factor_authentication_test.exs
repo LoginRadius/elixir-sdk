@@ -3,14 +3,14 @@ defmodule MultiFactorAuthenticationTest do
 
   defp get_access_token(login_response) do
     login_response
-      |> elem(1)
-      |> elem(1)
-      |> Map.fetch!("access_token")
+    |> elem(1)
+    |> elem(1)
+    |> Map.fetch!("access_token")
   end
 
   setup do
-    test_data = LoginRadius.Account.create(
-      %{
+    test_data =
+      LoginRadius.Account.create(%{
         "FirstName" => "testaccount",
         "LastName" => "auto",
         "Email" => [
@@ -29,15 +29,15 @@ defmodule MultiFactorAuthenticationTest do
         "EmailVerified" => true,
         "PhoneIdVerified" => true
       })
-  
-      on_exit fn ->
-        elem(test_data, 1)
-          |> elem(1)
-          |> Map.fetch!("Uid")
-          |> LoginRadius.Account.delete()
-      end
-  
-      %{"test_data" => test_data}
+
+    on_exit(fn ->
+      elem(test_data, 1)
+      |> elem(1)
+      |> Map.fetch!("Uid")
+      |> LoginRadius.Account.delete()
+    end)
+
+    %{"test_data" => test_data}
   end
 
   @tag :mfa
@@ -47,8 +47,10 @@ defmodule MultiFactorAuthenticationTest do
       "password" => "password"
     }
 
-    test_mel_response = login_data
+    test_mel_response =
+      login_data
       |> LoginRadius.MultiFactorAuthentication.login_by_email()
+
     assert elem(test_mel_response, 0) == :ok
   end
 
@@ -59,7 +61,8 @@ defmodule MultiFactorAuthenticationTest do
       "password" => "password"
     }
 
-    test_mul_response = login_data
+    test_mul_response =
+      login_data
       |> LoginRadius.MultiFactorAuthentication.login_by_username()
 
     assert elem(test_mul_response, 0) == :ok
@@ -72,7 +75,8 @@ defmodule MultiFactorAuthenticationTest do
       "password" => "password"
     }
 
-    test_mpl_response = login_data
+    test_mpl_response =
+      login_data
       |> LoginRadius.MultiFactorAuthentication.login_by_phone()
 
     assert elem(test_mpl_response, 0) == :ok
@@ -85,7 +89,8 @@ defmodule MultiFactorAuthenticationTest do
       "password" => "password"
     }
 
-    test_mvat_response = login_data
+    test_mvat_response =
+      login_data
       |> LoginRadius.MultiFactorAuthentication.login_by_email()
       |> get_access_token()
       |> LoginRadius.MultiFactorAuthentication.validate_access_token()

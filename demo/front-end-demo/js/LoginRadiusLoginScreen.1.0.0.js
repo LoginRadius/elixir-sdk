@@ -1586,8 +1586,10 @@
                         document.getElementsByClassName("loginradius-otpsignin")[0].style.display = "none";
                         document.getElementById("loginradius-otpsignin-send-an-otp-to-sign-in").style.display = "none";
                   }
-                  var passwordNode = document.getElementsByClassName('content-loginradius-password')[0];
-                  passwordNode.parentNode.insertBefore(document.getElementById('lr-forgotpw-btn'), passwordNode.nextSibling);   
+                  if(document.getElementById('lr-forgotpw-btn')){
+                        var passwordNode = document.getElementsByClassName('content-loginradius-password')[0];
+                        passwordNode.parentNode.insertBefore(document.getElementById('lr-forgotpw-btn'), passwordNode.nextSibling);   
+                    }
             })
             if(options.singlepagestyle) {
                   document.getElementsByClassName("content")[0].style.paddingBottom = "20px";

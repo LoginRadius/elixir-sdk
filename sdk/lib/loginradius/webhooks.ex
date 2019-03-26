@@ -7,33 +7,36 @@ defmodule LoginRadius.Webhooks do
   @default_headers [{"Content-Type", "application/json"}]
   # Webhook APIs don't support API secrets in headers.
   @default_params [
-    {"apikey", Application.fetch_env!(:loginradius_elixir_sdk, :apikey)},
-    {"apisecret", Application.fetch_env!(:loginradius_elixir_sdk, :apisecret)}
+    {"apikey", Application.fetch_env!(:loginradius, :apikey)},
+    {"apisecret", Application.fetch_env!(:loginradius, :apisecret)}
   ]
 
-  @spec post_request(String.t(), map(), list()) :: LoginRadius.response()
+  @spec post_request(String.t(), map(), list()) :: LoginRadius.lr_response()
   defp post_request(resource, data, params \\ []) do
     LoginRadius.post_request(
       resource,
+      "api",
       data,
       @default_headers,
       @default_params ++ params
     )
   end
 
-  @spec get_request(String.t(), list()) :: LoginRadius.response()
+  @spec get_request(String.t(), list()) :: LoginRadius.lr_response()
   defp get_request(resource, params \\ []) do
     LoginRadius.get_request(
       resource,
+      "api",
       @default_headers,
       @default_params ++ params
     ) 
   end
 
-  @spec delete_request(String.t(), map(), list()) :: LoginRadius.response()
+  @spec delete_request(String.t(), map(), list()) :: LoginRadius.lr_response()
   defp delete_request(resource, data, params \\ []) do
     LoginRadius.delete_request(
       resource,
+      "api",
       data,
       @default_headers,
       @default_params ++ params
@@ -45,7 +48,7 @@ defmodule LoginRadius.Webhooks do
   Subscribes a Webhook on your LoginRadius site.
   https://docs.loginradius.com/api/v2/integrations/web-hook-subscribe-api
   """
-  @spec subscribe(map()) :: LoginRadius.response()
+  @spec subscribe(map()) :: LoginRadius.lr_response()
   def subscribe(data) do
     @base_resource
       |> post_request(data)
@@ -56,7 +59,7 @@ defmodule LoginRadius.Webhooks do
   Tests subscribed Webhooks.
   https://docs.loginradius.com/api/v2/integrations/web-hook-test
   """
-  @spec test() :: LoginRadius.response()
+  @spec test() :: LoginRadius.lr_response()
   def test() do
     @base_resource <> "/test"
       |> get_request()
@@ -67,7 +70,7 @@ defmodule LoginRadius.Webhooks do
   Retrieves all subscribed URLs for a particular event.
   https://docs.loginradius.com/api/v2/integrations/web-hook-subscribed-urls
   """
-  @spec get_subscribed_urls(String.t()) :: LoginRadius.response()
+  @spec get_subscribed_urls(String.t()) :: LoginRadius.lr_response()
   def get_subscribed_urls(event) do
     query_params = [
       {"event", event}
@@ -82,7 +85,7 @@ defmodule LoginRadius.Webhooks do
   Unsubscribes a Webhook configured on your LoginRadius site.
   https://docs.loginradius.com/api/v2/integrations/web-hook-unsubscribe
   """
-  @spec unsubscribe(map()) :: LoginRadius.response()
+  @spec unsubscribe(map()) :: LoginRadius.lr_response()
   def unsubscribe(data) do
     @base_resource
       |> delete_request(data)

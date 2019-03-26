@@ -5,13 +5,14 @@ defmodule LoginRadius.PasswordlessLogin do
 
   @base_resource "/identity/v2/auth/login/passwordlesslogin"
   @default_params [
-    {"apikey", Application.fetch_env!(:loginradius_elixir_sdk, :apikey)}
+    {"apikey", Application.fetch_env!(:loginradius, :apikey)}
   ]
 
-  @spec get_request(String.t(), list(), list()) :: LoginRadius.response()
+  @spec get_request(String.t(), list(), list()) :: LoginRadius.lr_response()
   defp get_request(resource, headers, params) do
     LoginRadius.get_request(
       resource,
+      "api",
       headers,
       @default_params ++ params
     )
@@ -20,9 +21,9 @@ defmodule LoginRadius.PasswordlessLogin do
   @doc """
   GET - Passwordless Login by Email:
   Sends a Passwordless Login verification link to provided email.
-  https://docs.loginradius.com/api/v2/user-registration/passwordless-login-by-email
+  https://docs.loginradius.com/api/v2/customer-identity-api/passwordless-login/passwordless-login-by-email
   """
-  @spec login_by_email(String.t(), String.t(), String.t()) :: LoginRadius.response()
+  @spec login_by_email(String.t(), String.t(), String.t()) :: LoginRadius.lr_response()
   def login_by_email(email, passwordless_login_template \\ "", verification_url \\ "") do
     query_params = [
       {"email", email},
@@ -37,9 +38,9 @@ defmodule LoginRadius.PasswordlessLogin do
   @doc """
   GET - Passwordless Login by UserName:
   Sends a Passwordless Login verification link to provided username.
-  https://docs.loginradius.com/api/v2/user-registration/passwordless-login-by-username
+  https://docs.loginradius.com/api/v2/customer-identity-api/passwordless-login/passwordless-login-by-username
   """
-  @spec login_by_username(String.t(), String.t(), String.t()) :: LoginRadius.response()
+  @spec login_by_username(String.t(), String.t(), String.t()) :: LoginRadius.lr_response()
   def login_by_username(username, passwordless_login_template \\ "", verification_url \\ "") do
     query_params = [
       {"username", username},
@@ -54,9 +55,9 @@ defmodule LoginRadius.PasswordlessLogin do
   @doc """
   GET - Passwordless Login Verification:
   Verifies a Passwordless Login verification link.
-  https://docs.loginradius.com/api/v2/user-registration/passwordless-login-verification
+  https://docs.loginradius.com/api/v2/customer-identity-api/passwordless-login/passwordless-login-verification
   """
-  @spec login_verification(String.t(), String.t()) :: LoginRadius.response()
+  @spec login_verification(String.t(), String.t()) :: LoginRadius.lr_response()
   def login_verification(verification_token, welcome_email_template \\ "") do
     query_params = [
       {"verificationtoken", verification_token},

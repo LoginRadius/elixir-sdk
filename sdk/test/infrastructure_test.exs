@@ -17,21 +17,34 @@ defmodule InfrastructureTest do
   end
 
   test "Generate PBKDF2 Key 1" do
-    test_key = LoginRadius.Infrastructure.pbkdf2(:sha, "password", <<0, 0, 0, 0, 0, 0, 0, 0>>, 1000, 32)
+    test_key =
+      LoginRadius.Infrastructure.pbkdf2(:sha, "password", <<0, 0, 0, 0, 0, 0, 0, 0>>, 1000, 32)
       |> Base.encode64()
+
     assert test_key == "x+1lU2MEHchov3OrO0rGhpqx/2dR3V10iI2xUsR0x28="
   end
 
   test "Generate PBKDF2 Key 2" do
-    test_key = LoginRadius.Infrastructure.pbkdf2(:sha256, "example", <<0, 32, 0, 0, 255, 0, 0, 0>>, 500, 16)
+    test_key =
+      LoginRadius.Infrastructure.pbkdf2(
+        :sha256,
+        "example",
+        <<0, 32, 0, 0, 255, 0, 0, 0>>,
+        500,
+        16
+      )
       |> Base.encode64()
+
     assert test_key == "TdrWWsRMpp2oxujMLZ7d9w=="
   end
 
   test "Generate PBKDF2 Key 3" do
-    test_key = LoginRadius.Infrastructure.pbkdf2(:sha512, "example", <<1, 1, 0, 0, 1, 0, 0, 0>>, 750, 64)
+    test_key =
+      LoginRadius.Infrastructure.pbkdf2(:sha512, "example", <<1, 1, 0, 0, 1, 0, 0, 0>>, 750, 64)
       |> Base.encode64()
-    assert test_key == "attlny3NNNXNVDB15iSN803VMjyWgTngsEX+TrKrm+v3SB3RTw0UPkxer43lqDDgMX/8SUXPd654zP+ctmiQ0Q=="
+
+    assert test_key ==
+             "attlny3NNNXNVDB15iSN803VMjyWgTngsEX+TrKrm+v3SB3RTw0UPkxer43lqDDgMX/8SUXPd654zP+ctmiQ0Q=="
   end
 
   test "Generate Local SOTT" do

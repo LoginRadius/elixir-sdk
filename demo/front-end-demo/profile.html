@@ -14,13 +14,13 @@
 <body>
     <div class="section-menu">
         <div class="menu-header">
-            <a href="index.html">
+            <a href="profile.html">
                 <img src="lr-logo.png"/>
             </a>
-            <span style="display:block;margin-left:120px">SDK Web Demo</span>
+            <span style="display:block;margin-left:120px">Elixir Web Demo</span>
             <div class="button-group">
-                <a href="index.html">Minimal</a>
-                <a href="loginscreen.html">Login Screen</a>
+                <a href="profile.html">Minimal</a>
+                <a href="profile.html">Login Screen</a>
             </div>
         </div>
         <div class="vertical-menu">
@@ -32,12 +32,14 @@
             <a class="menu-options" href="#customobjects" id="menu-customobjects">Custom Object Management</a>
             <a class="menu-options" href="#multifactor" id="menu-multifactor">Configure MultiFactor</a>
             <a class="menu-options" href="#roles" id="menu-roles">Roles Management</a>
+            <a class="menu-options" href="#" id="menu-logout">Logout</a>
         </div>
     </div>
     <div class="section-main">
         <div class="right-elem profile-elem">
             <h3>Profile</h3>
             <div class="container">
+                <span id="profile-image"></span><br/>
                 <span id="profile-name"><b></b></span><br/>
                 <span id="profile-provider"></span><br/>
                 <span id="profile-email"></span><br/>
@@ -151,6 +153,7 @@
                         </tr>
                     </tbody>
                 </table>
+                <span id="user-allroles-message"></span>
                 <br/>
     
                 <b>Create Role</b><br/>
@@ -173,6 +176,7 @@
                         </tr>
                     </tbody>
                 </table>
+                <span id="user-userroles-message"></span>
                 <br/>
     
                 <b>Assign Role to User</b><br/>

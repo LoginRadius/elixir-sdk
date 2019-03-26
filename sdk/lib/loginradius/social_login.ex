@@ -3,26 +3,28 @@ defmodule LoginRadius.SocialLogin do
   Elixir wrapper for the LoginRadius Social Login API module
   """
   
-  @apikey Application.fetch_env!(:loginradius_elixir_sdk, :apikey)
-  @apisecret Application.fetch_env!(:loginradius_elixir_sdk, :apisecret)
+  @apikey Application.fetch_env!(:loginradius, :apikey)
+  @apisecret Application.fetch_env!(:loginradius, :apisecret)
 
   @base_resource "/api/v2"
   # Social Login APIs don't support API secrets in headers.
 
-  @spec post_request(String.t(), map(), list(), list()) :: LoginRadius.response()
+  @spec post_request(String.t(), map(), list(), list()) :: LoginRadius.lr_response()
   defp post_request(resource, data, headers, params) do
     LoginRadius.post_request(
       resource,
+      "api",
       data,
       headers,
       params
     )
   end
 
-  @spec get_request(String.t(), list(), list()) :: LoginRadius.response()
+  @spec get_request(String.t(), list(), list()) :: LoginRadius.lr_response()
   defp get_request(resource, headers, params) do
     LoginRadius.get_request(
       resource,
+      "api",
       headers,
       params
     )
@@ -33,9 +35,9 @@ defmodule LoginRadius.SocialLogin do
   Posts messages to a user's contacts. This is part of the Friend Invite System.
   Used after the Contact API, and requires setting of permissions in LR Dashboard.
   (Twitter, LinkedIn)
-  https://docs.loginradius.com/api/v2/social-login/post-message-api
+  https://docs.loginradius.com/api/v2/customer-identity-api/social-login/advanced-social-api/post-message-api
   """
-  @spec message_post(String.t(), String.t(), String.t(), String.t()) :: LoginRadius.response()
+  @spec message_post(String.t(), String.t(), String.t(), String.t()) :: LoginRadius.lr_response()
   def message_post(access_token, to, subject, message) do
     query_params = [
       {"access_token", access_token},
@@ -54,7 +56,7 @@ defmodule LoginRadius.SocialLogin do
   (Facebook, Twitter, LinkedIn)
   https://docs.loginradius.com/api/v2/social-login/post-status-posting
   """
-  @spec status_posting_post(String.t(), String.t(), String.t(), String.t(), String.t(), String.t(), String.t()) :: LoginRadius.response()
+  @spec status_posting_post(String.t(), String.t(), String.t(), String.t(), String.t(), String.t(), String.t()) :: LoginRadius.lr_response()
   def status_posting_post(access_token, title, url, image_url, status, caption, description) do
     query_params = [
       {"access_token", access_token},
@@ -74,9 +76,9 @@ defmodule LoginRadius.SocialLogin do
   GET - Access Token:
   Translates the request token returned during social provider authentication into an access token
   that can be used with LR API calls.
-  https://docs.loginradius.com/api/v2/social-login/access-token
+  https://docs.loginradius.com/api/v2/customer-identity-api/social-login/access-token
   """
-  @spec access_token(String.t()) :: LoginRadius.response()
+  @spec access_token(String.t()) :: LoginRadius.lr_response()
   def access_token(request_token) do
     query_params = [
       {"token", request_token},
@@ -90,9 +92,9 @@ defmodule LoginRadius.SocialLogin do
   @doc """
   GET - Validate Access Token:
   Validates an access token, returns error if invalid.
-  https://docs.loginradius.com/api/v2/social-login/token-validate
+  https://docs.loginradius.com/api/v2/customer-identity-api/social-login/validate-access-token
   """
-  @spec validate_access_token(String.t()) :: LoginRadius.response()
+  @spec validate_access_token(String.t()) :: LoginRadius.lr_response()
   def validate_access_token(access_token) do
     query_params = [
       {"access_token", access_token},
@@ -107,9 +109,9 @@ defmodule LoginRadius.SocialLogin do
   @doc """
   GET - Invalidate Access Token:
   Invalidates an active access token.
-  https://docs.loginradius.com/api/v2/social-login/token-invalidate
+  https://docs.loginradius.com/api/v2/customer-identity-api/social-login/invalidate-access-token
   """
-  @spec invalidate_access_token(String.t()) :: LoginRadius.response()
+  @spec invalidate_access_token(String.t()) :: LoginRadius.lr_response()
   def invalidate_access_token(access_token) do
     query_params = [
       {"access_token", access_token},
@@ -125,9 +127,9 @@ defmodule LoginRadius.SocialLogin do
   GET - Album:
   Retrieves the photo albums associated with an access token.
   (Facebook, Google, Live, Vkontakte)
-  https://docs.loginradius.com/api/v2/social-login/album
+  https://docs.loginradius.com/api/v2/customer-identity-api/social-login/advanced-social-api/album
   """
-  @spec album(String.t()) :: LoginRadius.response()
+  @spec album(String.t()) :: LoginRadius.lr_response()
   def album(access_token) do
     query_params = [
       {"access_token", access_token}
@@ -141,9 +143,9 @@ defmodule LoginRadius.SocialLogin do
   GET - Audio:
   Retrieves the audio files associated with an access token.
   (Live, Vkontakte)
-  https://docs.loginradius.com/api/v2/social-login/audio
+  https://docs.loginradius.com/api/v2/customer-identity-api/social-login/advanced-social-api/audio
   """
-  @spec audio(String.t()) :: LoginRadius.response()
+  @spec audio(String.t()) :: LoginRadius.lr_response()
   def audio(access_token) do
     query_params = [
       {"access_token", access_token}
@@ -157,9 +159,9 @@ defmodule LoginRadius.SocialLogin do
   GET - Check In:
   Retrieves the check in data associated with an access token.
   (Facebook, Foursquare, Vkontakte) 
-  https://docs.loginradius.com/api/v2/social-login/check-in
+  https://docs.loginradius.com/api/v2/customer-identity-api/social-login/advanced-social-api/check-in
   """
-  @spec check_in(String.t()) :: LoginRadius.response()
+  @spec check_in(String.t()) :: LoginRadius.lr_response()
   def check_in(access_token) do
     query_params = [
       {"access_token", access_token}
@@ -173,9 +175,9 @@ defmodule LoginRadius.SocialLogin do
   GET - Company:
   Retrieves a user's followed companies data associated with an access token.
   (Facebook, LinkedIn)
-  https://docs.loginradius.com/api/v2/social-login/company
+  https://docs.loginradius.com/api/v2/customer-identity-api/social-login/advanced-social-api/company
   """
-  @spec company(String.t()) :: LoginRadius.response()
+  @spec company(String.t()) :: LoginRadius.lr_response()
   def company(access_token) do
     query_params = [
       {"access_token", access_token}
@@ -190,9 +192,9 @@ defmodule LoginRadius.SocialLogin do
   Retrieves the contacts/friends/connections data associated with an access token. This is part of the
   LR Friend Invite System, and requires permissions to be set in the LR Dashboard.
   (Facebook, Foursquare, Google, LinkedIn, Live, Twitter, Vkontakte, Yahoo)
-  https://docs.loginradius.com/api/v2/social-login/contact
+  https://docs.loginradius.com/api/v2/customer-identity-api/social-login/advanced-social-api/contact
   """
-  @spec contact(String.t(), String.t()) :: LoginRadius.response()
+  @spec contact(String.t(), String.t()) :: LoginRadius.lr_response()
   def contact(access_token, next_cursor \\ "") do
     query_params = [
       {"access_token", access_token},
@@ -207,9 +209,9 @@ defmodule LoginRadius.SocialLogin do
   GET - Event:
   Retrieves Event data associated with an access token.
   (Facebook, Live)
-  https://docs.loginradius.com/api/v2/social-login/event
+  https://docs.loginradius.com/api/v2/customer-identity-api/social-login/advanced-social-api/event
   """
-  @spec event(String.t()) :: LoginRadius.response()
+  @spec event(String.t()) :: LoginRadius.lr_response()
   def event(access_token) do
     query_params = [
       {"access_token", access_token}
@@ -223,9 +225,9 @@ defmodule LoginRadius.SocialLogin do
   GET - Following:
   Retrieves Following user list associated with an access token.
   (Twitter)
-  https://docs.loginradius.com/api/v2/social-login/following
+  https://docs.loginradius.com/api/v2/customer-identity-api/social-login/advanced-social-api/following
   """
-  @spec following(String.t()) :: LoginRadius.response()
+  @spec following(String.t()) :: LoginRadius.lr_response()
   def following(access_token) do
     query_params = [
       {"access_token", access_token}
@@ -239,9 +241,9 @@ defmodule LoginRadius.SocialLogin do
   GET - Group:
   Retrieves Group data associated with an access token.
   (Facebook, Vkontakte)
-  https://docs.loginradius.com/api/v2/social-login/group
+  https://docs.loginradius.com/api/v2/customer-identity-api/social-login/advanced-social-api/group
   """
-  @spec group(String.t()) :: LoginRadius.response()
+  @spec group(String.t()) :: LoginRadius.lr_response()
   def group(access_token) do
     query_params = [
       {"access_token", access_token}
@@ -255,9 +257,9 @@ defmodule LoginRadius.SocialLogin do
   GET - Like:
   Retrieves Like data associated with an access token.
   (Facebook)
-  https://docs.loginradius.com/api/v2/social-login/like
+  https://docs.loginradius.com/api/v2/customer-identity-api/social-login/advanced-social-api/like
   """
-  @spec like(String.t()) :: LoginRadius.response()
+  @spec like(String.t()) :: LoginRadius.lr_response()
   def like(access_token) do
     query_params = [
       {"access_token", access_token}
@@ -271,9 +273,9 @@ defmodule LoginRadius.SocialLogin do
   GET - Mention:
   Retrieves Mentions data associated with an access token.
   (Twitter)
-  https://docs.loginradius.com/api/v2/social-login/mention
+  https://docs.loginradius.com/api/v2/customer-identity-api/social-login/advanced-social-api/mention
   """
-  @spec mention(String.t()) :: LoginRadius.response()
+  @spec mention(String.t()) :: LoginRadius.lr_response()
   def mention(access_token) do
     query_params = [
       {"access_token", access_token}
@@ -289,9 +291,9 @@ defmodule LoginRadius.SocialLogin do
   Used after the Contact API, and requires setting of permissions in LR Dashboard.
   Identical to message_post.
   (Twitter, LinkedIn)
-  https://docs.loginradius.com/api/v2/social-login/get-message-api
+  https://docs.loginradius.com/api/v2/customer-identity-api/social-login/advanced-social-api/get-message-api
   """
-  @spec message_get(String.t(), String.t(), String.t(), String.t()) :: LoginRadius.response()
+  @spec message_get(String.t(), String.t(), String.t(), String.t()) :: LoginRadius.lr_response()
   def message_get(access_token, to, subject, message) do
     query_params = [
       {"access_token", access_token},
@@ -308,9 +310,9 @@ defmodule LoginRadius.SocialLogin do
   GET - Page:
   Retrieves page data associated with an access token.
   (Facebook, LinkedIn)
-  https://docs.loginradius.com/api/v2/social-login/page
+  https://docs.loginradius.com/api/v2/customer-identity-api/social-login/advanced-social-api/page
   """
-  @spec page(String.t(), String.t()) :: LoginRadius.response()
+  @spec page(String.t(), String.t()) :: LoginRadius.lr_response()
   def page(access_token, page_name) do
     query_params = [
       {"access_token", access_token},
@@ -325,9 +327,9 @@ defmodule LoginRadius.SocialLogin do
   GET - Photo:
   Retrieves photo data associated with an access token.
   (Facebook, Foursquare, Google, Live, Vkontakte)
-  https://docs.loginradius.com/api/v2/social-login/photo
+  https://docs.loginradius.com/api/v2/customer-identity-api/social-login/advanced-social-api/photo
   """
-  @spec photo(String.t(), String.t()) :: LoginRadius.response()
+  @spec photo(String.t(), String.t()) :: LoginRadius.lr_response()
   def photo(access_token, album_id) do
     query_params = [
       {"access_token", access_token},
@@ -342,9 +344,9 @@ defmodule LoginRadius.SocialLogin do
   GET - Post:
   Retrieves post message data associated with an access token.
   (Facebook)
-  https://docs.loginradius.com/api/v2/social-login/post
+  https://docs.loginradius.com/api/v2/customer-identity-api/social-login/advanced-social-api/post
   """
-  @spec post(String.t()) :: LoginRadius.response()
+  @spec post(String.t()) :: LoginRadius.lr_response()
   def post(access_token) do
     query_params = [
       {"access_token", access_token}
@@ -358,9 +360,9 @@ defmodule LoginRadius.SocialLogin do
   GET - Status Fetching:
   Retrieves status messages associated with an access token.
   (Facebook, Linkedin, Twitter, Vkontakte)
-  https://docs.loginradius.com/api/v2/social-login/status
+  https://docs.loginradius.com/api/v2/customer-identity-api/social-login/advanced-social-api/status-fetching
   """
-  @spec status_fetching(String.t()) :: LoginRadius.response()
+  @spec status_fetching(String.t()) :: LoginRadius.lr_response()
   def status_fetching(access_token) do
     query_params = [
       {"access_token", access_token}
@@ -375,9 +377,9 @@ defmodule LoginRadius.SocialLogin do
   Updates the status on a user (associated with an access token)'s wall.
   Identical to status_posting_post.
   (Facebook, Twitter, LinkedIn)
-  https://docs.loginradius.com/api/v2/social-login/status-posting
+  https://docs.loginradius.com/api/v2/customer-identity-api/social-login/advanced-social-api/status-posting
   """
-  @spec status_posting_get(String.t(), String.t(), String.t(), String.t(), String.t(), String.t(), String.t()) :: LoginRadius.response()
+  @spec status_posting_get(String.t(), String.t(), String.t(), String.t(), String.t(), String.t(), String.t()) :: LoginRadius.lr_response()
   def status_posting_get(access_token, title, url, image_url, status, caption, description) do
     query_params = [
       {"access_token", access_token},
@@ -397,9 +399,9 @@ defmodule LoginRadius.SocialLogin do
   GET - User Profile:
   Retrieves social profile data associated with an access token.
   (All)
-  https://docs.loginradius.com/api/v2/social-login/user-profile
+  https://docs.loginradius.com/api/v2/customer-identity-api/social-login/user-profile
   """
-  @spec user_profile(String.t()) :: LoginRadius.response()
+  @spec user_profile(String.t()) :: LoginRadius.lr_response()
   def user_profile(access_token) do
     query_params = [
       {"access_token", access_token}
@@ -413,9 +415,9 @@ defmodule LoginRadius.SocialLogin do
   GET - Video:
   Retrieves video files data associated with an access token.
   (Facebook, Google, Live, Vkontakte)
-  https://docs.loginradius.com/api/v2/social-login/video
+  https://docs.loginradius.com/api/v2/customer-identity-api/social-login/advanced-social-api/video
   """
-  @spec video(String.t()) :: LoginRadius.response()
+  @spec video(String.t()) :: LoginRadius.lr_response()
   def video(access_token, next_cursor \\ "") do
     query_params = [
       {"access_token", access_token},

@@ -114,6 +114,10 @@ hr {
     margin: auto;
 }
 
+.container img {
+    width: 150px;
+}
+
 .customobj-container {
     background-color: #eee;
     width: 600px;
@@ -151,13 +155,6 @@ hr {
 
 .success-message {
     color: green;
-}
-
-#customobj-container {
-    background-color: #eee;
-    height: 650px;
-    width: 400px;
-    padding: 30px 20px 0 20px;
 }
 
 /*==============================================================*/

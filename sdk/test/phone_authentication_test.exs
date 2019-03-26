@@ -3,22 +3,22 @@ defmodule PhoneAuthenticationTest do
 
   defp get_uid(test_login) do
     test_login
-      |> elem(1)
-      |> elem(1)
-      |> Map.fetch!("Profile")
-      |> Map.fetch!("Uid")
+    |> elem(1)
+    |> elem(1)
+    |> Map.fetch!("Profile")
+    |> Map.fetch!("Uid")
   end
 
   defp get_access_token(test_login) do
     test_login
-      |> elem(1)
-      |> elem(1)
-      |> Map.fetch!("access_token")
+    |> elem(1)
+    |> elem(1)
+    |> Map.fetch!("access_token")
   end
 
   setup do
-    test_data = LoginRadius.Account.create(
-      %{
+    test_data =
+      LoginRadius.Account.create(%{
         "FirstName" => "testaccount",
         "LastName" => "auto",
         "Email" => [
@@ -45,12 +45,12 @@ defmodule PhoneAuthenticationTest do
 
     test_login = LoginRadius.PhoneAuthentication.login(login_data, "www.test.com")
 
-    on_exit fn ->
+    on_exit(fn ->
       elem(test_data, 1)
-        |> elem(1)
-        |> Map.fetch!("Uid")
-        |> LoginRadius.Account.delete()
-    end
+      |> elem(1)
+      |> Map.fetch!("Uid")
+      |> LoginRadius.Account.delete()
+    end)
 
     %{"test_login" => test_login}
   end
@@ -64,7 +64,8 @@ defmodule PhoneAuthenticationTest do
       "phone" => "17787694512"
     }
 
-    test_pfpbo_response = LoginRadius.PhoneAuthentication.forgot_password_by_otp(phone_data, "forgotpassword-default")
+    test_pfpbo_response =
+      LoginRadius.PhoneAuthentication.forgot_password_by_otp(phone_data, "forgotpassword-default")
 
     assert elem(test_pfpbo_response, 0) == :ok
   end
@@ -73,15 +74,17 @@ defmodule PhoneAuthenticationTest do
     update_data = %{
       "PhoneIdVerified" => false
     }
+
     phone_data = %{
       "phone" => "17787694512"
     }
 
     test_login
-      |> get_uid()
-      |> LoginRadius.Account.update(update_data)
+    |> get_uid()
+    |> LoginRadius.Account.update(update_data)
 
-    test_prvo_response = LoginRadius.PhoneAuthentication.resend_verification_otp(phone_data, "verification-default")
+    test_prvo_response =
+      LoginRadius.PhoneAuthentication.resend_verification_otp(phone_data, "verification-default")
 
     assert elem(test_prvo_response, 0) == :ok
   end
@@ -90,15 +93,17 @@ defmodule PhoneAuthenticationTest do
     update_data = %{
       "PhoneIdVerified" => false
     }
+
     phone_data = %{
       "phone" => "17787694512"
     }
-    
-    test_login
-      |> get_uid()
-      |> LoginRadius.Account.update(update_data)
 
-    test_prvobt_response = test_login
+    test_login
+    |> get_uid()
+    |> LoginRadius.Account.update(update_data)
+
+    test_prvobt_response =
+      test_login
       |> get_access_token()
       |> LoginRadius.PhoneAuthentication.resend_verification_otp_by_access_token(phone_data)
 
@@ -126,11 +131,17 @@ defmodule PhoneAuthenticationTest do
       "PhoneIdVerified" => true
     }
 
-    test_purbs_response = LoginRadius.PhoneAuthentication.user_registration_by_sms(registration_data, "www.test.com", "welcome-default")
+    test_purbs_response =
+      LoginRadius.PhoneAuthentication.user_registration_by_sms(
+        registration_data,
+        "www.test.com",
+        "welcome-default"
+      )
 
     assert elem(test_purbs_response, 0) == :ok
 
-    test_ad_response = LoginRadius.Account.profiles_by_email("testaccountauto2@mailinator.com")
+    test_ad_response =
+      LoginRadius.Account.profiles_by_email("testaccountauto2@mailinator.com")
       |> elem(1)
       |> elem(1)
       |> Map.fetch!("Uid")
@@ -141,7 +152,7 @@ defmodule PhoneAuthenticationTest do
 
   test "Phone Number Availability" do
     test_pna_response = LoginRadius.PhoneAuthentication.phone_number_availability("17785875110")
-    
+
     assert elem(test_pna_response, 0) == :ok
   end
 
@@ -150,7 +161,8 @@ defmodule PhoneAuthenticationTest do
       "phone" => "17787694512"
     }
 
-    test_pnu_response = test_login
+    test_pnu_response =
+      test_login
       |> get_access_token()
       |> LoginRadius.PhoneAuthentication.phone_number_update(update_data)
 
@@ -173,7 +185,8 @@ defmodule PhoneAuthenticationTest do
   end
 
   test "Reset Phone Id Verification", %{"test_login" => test_login} do
-    test_rpiv_response = test_login
+    test_rpiv_response =
+      test_login
       |> get_uid()
       |> LoginRadius.PhoneAuthentication.reset_phone_id_verification()
 
@@ -181,7 +194,8 @@ defmodule PhoneAuthenticationTest do
   end
 
   test "Remove Phone ID by Access Token", %{"test_login" => test_login} do
-    test_rpibat_response = test_login
+    test_rpibat_response =
+      test_login
       |> get_access_token()
       |> LoginRadius.PhoneAuthentication.remove_phone_id_by_access_token()
 
@@ -189,7 +203,8 @@ defmodule PhoneAuthenticationTest do
   end
 
   test "Phone Send One Time Passcode" do
-    test_psotp_response = "17787694512"
+    test_psotp_response =
+      "17787694512"
       |> LoginRadius.PhoneAuthentication.send_one_time_passcode()
 
     assert elem(test_psotp_response, 0) == :ok

@@ -20,26 +20,28 @@ defmodule LrElixirDemoServerWeb do
   def controller do
     quote do
       use Phoenix.Controller, namespace: LrElixirDemoServerWeb
+
       import Plug.Conn
-      import LrElixirDemoServerWeb.Router.Helpers
       import LrElixirDemoServerWeb.Gettext
+      alias LrElixirDemoServerWeb.Router.Helpers, as: Routes
     end
   end
 
   def view do
     quote do
-      use Phoenix.View, root: "lib/lr_elixir_demo_server_web/templates",
-                        namespace: LrElixirDemoServerWeb
+      use Phoenix.View,
+        root: "lib/lr_elixir_demo_server_web/templates",
+        namespace: LrElixirDemoServerWeb
 
       # Import convenience functions from controllers
-      import Phoenix.Controller, only: [get_flash: 2, view_module: 1]
+      import Phoenix.Controller, only: [get_flash: 1, get_flash: 2, view_module: 1]
 
       # Use all HTML functionality (forms, tags, etc)
       use Phoenix.HTML
 
-      import LrElixirDemoServerWeb.Router.Helpers
       import LrElixirDemoServerWeb.ErrorHelpers
       import LrElixirDemoServerWeb.Gettext
+      alias LrElixirDemoServerWeb.Router.Helpers, as: Routes
     end
   end
 

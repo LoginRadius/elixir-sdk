@@ -12,7 +12,7 @@ defmodule LrElixirDemoServerWeb.Router do
   pipeline :api do
     plug :accepts, ["json"]
   end
-  
+
   scope "/api/v1", LrElixirDemoServerWeb do
     pipe_through :api
 

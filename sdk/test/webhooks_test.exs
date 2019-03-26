@@ -13,14 +13,15 @@ defmodule WebhooksTest do
       "event" => "Login"
     }
 
-    test_whs_response = subscribe_data
+    test_whs_response =
+      subscribe_data
       |> LoginRadius.Webhooks.subscribe()
 
     assert elem(test_whs_response, 0) == :ok
 
     # Webhook Test
     test_wht_response = LoginRadius.Webhooks.test()
-    
+
     assert elem(test_wht_response, 0) == :ok
 
     # Webhook Subscribed URLs
@@ -29,7 +30,8 @@ defmodule WebhooksTest do
     assert elem(test_whsu_response, 0) == :ok
 
     # Webhook Unsubscribe
-    test_whu_response = subscribe_data
+    test_whu_response =
+      subscribe_data
       |> LoginRadius.Webhooks.unsubscribe()
 
     assert elem(test_whu_response, 0) == :ok

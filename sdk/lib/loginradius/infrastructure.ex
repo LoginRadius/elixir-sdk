@@ -4,8 +4,8 @@ defmodule LoginRadius.Infrastructure do
   and SOTT generation functions.
   """
   
-  @apikey Application.fetch_env!(:loginradius_elixir_sdk, :apikey)
-  @apisecret Application.fetch_env!(:loginradius_elixir_sdk, :apisecret)
+  @apikey Application.fetch_env!(:loginradius, :apikey)
+  @apisecret Application.fetch_env!(:loginradius, :apisecret)
 
   @base_resource "/identity/v2"
   @default_params [
@@ -15,10 +15,11 @@ defmodule LoginRadius.Infrastructure do
   @init_vector "tu89geji340t89u2"
   @key_size 256
 
-  @spec get_request(String.t(), list(), list()) :: LoginRadius.response()
+  @spec get_request(String.t(), list(), list()) :: LoginRadius.lr_response()
   defp get_request(resource, headers, params) do
     LoginRadius.get_request(
       resource,
+      "api",
       headers,
       @default_params ++ params
     )
@@ -28,7 +29,7 @@ defmodule LoginRadius.Infrastructure do
   GET - Get Server Time:
   Queries for basic server information. Time difference is used to generate values for
   SOTT generation.
-  https://docs.loginradius.com/api/v2/user-registration/infrastructure-get-server-time
+  https://docs.loginradius.com/api/v2/customer-identity-api/configuration/get-server-time
   """
   @spec get_server_time(integer) :: LoginRadius.handle_response()
   def get_server_time(time_difference \\ 10) do
@@ -43,9 +44,9 @@ defmodule LoginRadius.Infrastructure do
   @doc """
   GET - Generate SOTT:
   Generates a Secured One Time Token.
-  https://docs.loginradius.com/api/v2/user-registration/generate-sott
+  https://docs.loginradius.com/api/v2/customer-identity-api/session/generate-sott-token
   """
-  @spec generate_sott(integer) :: LoginRadius.response()
+  @spec generate_sott(integer) :: LoginRadius.lr_response()
   def generate_sott(validity_length \\ 10) do
     headers = [
       {"X-LoginRadius-ApiSecret", @apisecret}

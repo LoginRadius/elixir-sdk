@@ -21,8 +21,8 @@ defmodule RolesManagementTest do
   """
   test "Roles Management Integration Test" do
     # Create User
-    test_account_uid = LoginRadius.Account.create(
-      %{
+    test_account_uid =
+      LoginRadius.Account.create(%{
         "FirstName" => "testaccount",
         "LastName" => "auto",
         "Email" => [
@@ -62,6 +62,7 @@ defmodule RolesManagementTest do
         }
       ]
     }
+
     test_rc_response = LoginRadius.RolesManagement.roles_create(role_data)
 
     assert elem(test_rc_response, 0) == :ok
@@ -78,7 +79,9 @@ defmodule RolesManagementTest do
         "pname6"
       ]
     }
-    test_aaptr_response = "example_role2"
+
+    test_aaptr_response =
+      "example_role2"
       |> LoginRadius.RolesManagement.add_permissions_to_role(permission_data)
 
     assert elem(test_aaptr_response, 0) == :ok
@@ -90,13 +93,16 @@ defmodule RolesManagementTest do
         "example_role2"
       ]
     }
-    test_ratu_response = test_account_uid
+
+    test_ratu_response =
+      test_account_uid
       |> LoginRadius.RolesManagement.assign_roles_by_uid(assign_data)
-    
+
     assert elem(test_ratu_response, 0) == :ok
 
     # Get roles by UID
-    test_rbu_response = test_account_uid
+    test_rbu_response =
+      test_account_uid
       |> LoginRadius.RolesManagement.roles_by_uid()
 
     assert elem(test_rbu_response, 0) == :ok
@@ -118,13 +124,16 @@ defmodule RolesManagementTest do
         }
       ]
     }
-    test_uc_response = test_account_uid
+
+    test_uc_response =
+      test_account_uid
       |> LoginRadius.RolesManagement.upsert_context(context_data)
 
     assert elem(test_uc_response, 0) == :ok
 
     # Get Context
-    test_gcwrap_response = test_account_uid
+    test_gcwrap_response =
+      test_account_uid
       |> LoginRadius.RolesManagement.get_contexts()
 
     assert elem(test_gcwrap_response, 0) == :ok
@@ -136,8 +145,13 @@ defmodule RolesManagementTest do
         "eap2"
       ]
     }
-    test_dapfc_response = test_account_uid
-      |> LoginRadius.RolesManagement.delete_additional_permissions_from_context("example_context", delete_additional_permissions_data)
+
+    test_dapfc_response =
+      test_account_uid
+      |> LoginRadius.RolesManagement.delete_additional_permissions_from_context(
+        "example_context",
+        delete_additional_permissions_data
+      )
 
     assert elem(test_dapfc_response, 0) == :ok
 
@@ -147,15 +161,21 @@ defmodule RolesManagementTest do
         "example_role2"
       ]
     }
-    test_drfc_response = test_account_uid
-      |> LoginRadius.RolesManagement.delete_role_from_context("example_context", delete_context_data)
+
+    test_drfc_response =
+      test_account_uid
+      |> LoginRadius.RolesManagement.delete_role_from_context(
+        "example_context",
+        delete_context_data
+      )
 
     assert elem(test_drfc_response, 0) == :ok
 
     # Delete context
-    test_drc_response = test_account_uid
+    test_drc_response =
+      test_account_uid
       |> LoginRadius.RolesManagement.delete_role_context("example_context")
-    
+
     assert elem(test_drc_response, 0) == :ok
 
     # Unassign roles
@@ -164,7 +184,9 @@ defmodule RolesManagementTest do
         "example_role2"
       ]
     }
-    test_urbu_response = test_account_uid
+
+    test_urbu_response =
+      test_account_uid
       |> LoginRadius.RolesManagement.unassign_roles_by_uid(unassign_data)
 
     assert elem(test_urbu_response, 0) == :ok
@@ -175,15 +197,20 @@ defmodule RolesManagementTest do
         "pname2"
       ]
     }
-    test_dpfr_response = "example_role"
+
+    test_dpfr_response =
+      "example_role"
       |> LoginRadius.RolesManagement.remove_permissions(delete_permission_data)
-    
+
     assert elem(test_dpfr_response, 0) == :ok
 
     # Delete Role
-    test_dr_response1 = "example_role"
+    test_dr_response1 =
+      "example_role"
       |> LoginRadius.RolesManagement.delete_role()
-    test_dr_response2 = "example_role2"
+
+    test_dr_response2 =
+      "example_role2"
       |> LoginRadius.RolesManagement.delete_role()
 
     assert elem(test_dr_response1, 0) == :ok
@@ -191,6 +218,6 @@ defmodule RolesManagementTest do
 
     # Delete User
     test_account_uid
-      |> LoginRadius.Account.delete()
+    |> LoginRadius.Account.delete()
   end
 end

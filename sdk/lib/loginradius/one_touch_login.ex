@@ -8,22 +8,24 @@ defmodule LoginRadius.OneTouchLogin do
     {"Content-Type", "application/json"}
   ]
   @default_params [
-    {"apikey", Application.fetch_env!(:loginradius_elixir_sdk, :apikey)}
+    {"apikey", Application.fetch_env!(:loginradius, :apikey)}
   ]
 
-  @spec get_request(String.t(), list()) :: LoginRadius.response()
+  @spec get_request(String.t(), list()) :: LoginRadius.lr_response()
   defp get_request(resource, params) do
     LoginRadius.get_request(
       resource,
+      "api",
       [],
       @default_params ++ params
     )
   end
   
-  @spec put_request(String.t(), map(), list()) :: LoginRadius.response()
+  @spec put_request(String.t(), map(), list()) :: LoginRadius.lr_response()
   defp put_request(resource, data, params) do
     LoginRadius.put_request(
       resource,
+      "api",
       data,
       @default_headers,
       @default_params ++ params
@@ -35,7 +37,7 @@ defmodule LoginRadius.OneTouchLogin do
   Sends a link to a specified email for frictionless login.
   https://docs.loginradius.com/api/v2/one-touch/one-touch-login-by-email
   """
-  @spec login_by_email(String.t(), String.t(), String.t(), String.t(), String.t(), String.t()) :: LoginRadius.response()
+  @spec login_by_email(String.t(), String.t(), String.t(), String.t(), String.t(), String.t()) :: LoginRadius.lr_response()
   def login_by_email(email, client_guid, name \\ "", redirect_url \\ "", one_touch_login_email_template \\ "", welcome_email_template \\ "") do
     query_params = [
       {"clientguid", client_guid},
@@ -55,7 +57,7 @@ defmodule LoginRadius.OneTouchLogin do
   Sends a One Time Password to a given phone number for a frictionless login.
   https://docs.loginradius.com/api/v2/one-touch/one-touch-login-by-phone
   """
-  @spec login_by_phone(String.t(), String.t(), String.t()) :: LoginRadius.response()
+  @spec login_by_phone(String.t(), String.t(), String.t()) :: LoginRadius.lr_response()
   def login_by_phone(phone_id, name \\ "", sms_template \\ "") do
     query_params = [
       {"phone", phone_id},
@@ -68,11 +70,11 @@ defmodule LoginRadius.OneTouchLogin do
   end
 
   @doc """
-  GET - One Touch OTP Verification by Email:
+  GET - One Touch Email Verification:
   Verifies the provided token for One Touch Login by email.
-  https://docs.loginradius.com/api/v2/one-touch/one-touch-verify-otp-by-email
+  https://docs.loginradius.com/api/v2/customer-identity-api/one-touch-login/one-touch-email-verification
   """
-  @spec verify_otp_by_email(String.t(), String.t()) :: LoginRadius.response()
+  @spec verify_otp_by_email(String.t(), String.t()) :: LoginRadius.lr_response()
   def verify_otp_by_email(verification_token, welcome_email_template \\ "") do
     query_params = [
       {"verificationtoken", verification_token},
@@ -86,9 +88,9 @@ defmodule LoginRadius.OneTouchLogin do
   @doc """
   PUT - One Touch OTP Verification:
   Verifies the One Time Passcode for One Touch Login.
-  https://docs.loginradius.com/api/v2/one-touch/one-touch-verify-otp-by-phone
+  https://docs.loginradius.com/api/v2/customer-identity-api/one-touch-login/one-touch-otp-verification
   """
-  @spec verify_otp(String.t(), map(), String.t()) :: LoginRadius.response()
+  @spec verify_otp(String.t(), map(), String.t()) :: LoginRadius.lr_response()
   def verify_otp(otp, data, sms_template \\ "") do
     query_params = [
       {"otp", otp},
